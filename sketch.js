@@ -1,14 +1,18 @@
-let width = 400, height = 400;
+let width = windowWidth, height = windowHeight;
 let stars = [];
+let factor = 100;
+let speedSlider;
 
 function setup() {
   createCanvas(width, height);
-  for (let i = 0; i < 50; i++){
+  speedSlider=createSlider(1, 20, 10);
+  for (let i = 0; i < 500; i++){
     stars[i] = createVector(
-      random(-width*2, width*2),
-      random(-height*2, height*2),
-      10
+      random(-width*factor, width*factor),
+      random(-height*factor, height*factor),
+      random(10, 400)
     );
+    stars[i].pz = stars[i].z;
   }
 }
 
@@ -21,10 +25,25 @@ function draw() {
   for (let star of stars) {
     let x = star.x / star.z;
     let y = star.y / star.z;
+    let px = star.x / star.pz;
+    let py = star.y / star.pz;
 
-    let d = 15//map(star.z, 0, 400, 1, 10);
+    let d = map(star.z, 0, 400, 10, 1);
     circle(x, y, d);
-
-    //star.z += 1;
+    stroke(255);
+    line(x, y, px, py);
+    //textSize(d*5);
+    //text("*",x,y);
+    
+    star.pz = star.z;
+    star.z -= speedSlider.value();
+    if (star.z < 1){
+      star.x = 
+      random(-width*factor, width*factor);
+      star.y = 
+      random(-height*factor, height*factor);
+      star.z = 400;
+      star.pz = 400;
+    }
   }
 }
